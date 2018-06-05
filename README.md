@@ -1,6 +1,6 @@
-### Kernel Dumper for PS4
+# Kernel Dumper for PS4
 
-#Suported firmwares
+Suported firmwares
 
 4.05
 4.55
@@ -10,7 +10,7 @@
 
 Just changes this in /include/defines.h to make compatible with your version
 
-i.e "#define KERN_VER 455"
+i.e #define KERN_VER 455
 
 Compile with your PC's IP listening on port 9023
 
@@ -28,13 +28,13 @@ To compile you need to use an sdk with changes for latest fw support support, i 
 
 To dump the kernel image to the filesystem or USB stick either change/keep
 
-"#define KERN_FILEPATH "/mnt/usb0/kdump.bin""
+#define KERN_FILEPATH "/mnt/usb0/kdump.bin"
 
 ..to where ever you choose
 
 and to use the USB method simply comment out this line in /include/defines.h
 
-"#define DEBUG_SOCKET"
+#define DEBUG_SOCKET
 
 to send it is still:
 
