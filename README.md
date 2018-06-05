@@ -8,7 +8,7 @@ Suported firmwares
 
 # Network Mode
 
-Just changes this in ```/include/defines.h``` to make compatible with your version
+Just change this in ```/include/defines.h``` to make compatible with your version
 
 i.e 
 
