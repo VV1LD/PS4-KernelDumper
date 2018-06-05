@@ -8,9 +8,13 @@ Suported firmwares
 
 # Network Mode
 
-Just changes this in /include/defines.h to make compatible with your version
+Just changes this in ```/include/defines.h``` to make compatible with your version
 
-i.e #define KERN_VER 455
+i.e 
+
+```c
+#define KERN_VER 455
+```
 
 Compile with your PC's IP listening on port 9023
 
@@ -24,17 +28,21 @@ you can then trim out the socket prints or you can adapt it with 2 sockets, one 
 
 To compile you need to use an sdk with changes for latest fw support support, i have used https://github.com/xvortex/ps4-payload-sdk
 
-# USB/fileystem Mode
+# USB/Filesystem Mode
 
 To dump the kernel image to the filesystem or USB stick either change/keep
 
+```c
 #define KERN_FILEPATH "/mnt/usb0/kdump.bin"
+```
 
 ..to where ever you choose
 
 and to use the USB method simply comment out this line in /include/defines.h
 
+```c
 #define DEBUG_SOCKET
+```
 
 to send it is still:
 
