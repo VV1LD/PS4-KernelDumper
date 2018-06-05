@@ -6,7 +6,7 @@
 *
 *	Thanks to:
 *	-Qwertyuiop for his kernel exploits
-* -Specter for his Code Execution method
+* 	-Specter for his Code Execution method
 *	-IDC for helping to understand things
 *	-Shadow for the copyout trick ;)
 *
@@ -24,7 +24,7 @@ int kdump(struct thread *td, struct kdump_args* args){
 	void (*bzero)(void *b, size_t len) = (void *)(kernel_base + KERN_BZERO);
 
 	// pull in our arguments
-  uint64_t kaddr = args->payload_info_dumper->kaddr;
+  	uint64_t kaddr = args->payload_info_dumper->kaddr;
 	uint64_t uaddr = args->payload_info_dumper->uaddr;
 
 	// run copyout into userland memory for the kaddr we specify
@@ -236,7 +236,7 @@ int _main(struct thread *td){
 
 	// patch some things in the kernel (sandbox, prison, debug settings etc..)
 	
-  struct payload_info payload_info;
+  	struct payload_info payload_info;
 
 	payload_info.uaddr = dump;
 
@@ -261,7 +261,7 @@ int _main(struct thread *td){
 	// loop on our kdump payload 
 	
 	uint64_t pos = 0;
-  struct payload_info_dumper payload_info_dumper;
+  	struct payload_info_dumper payload_info_dumper;
 
 	notify("Starting Kernel Dump...");
 
@@ -290,25 +290,27 @@ int _main(struct thread *td){
 	}
 	
 #ifdef DEBUG_SOCKET
-		printfsocket("Finished dumping Kernel!\n");
-		sceNetSocketClose(sock);
+	printfsocket("Finished dumping Kernel!\n");
+	sceNetSocketClose(sock);
 
 #else
-		notify("Finished dumping Kernel to userland!");
-		notify("Now wait for file to be written, this may take a while...");
-		// write to file
-    FILE* fd = fopen(KERN_FILEPATH,"wb+");			
+	notify("Finished dumping Kernel to userland!");
+	notify("Now wait for file to be written, this may take a while...");
+		
+	// write to file
+    	FILE* fd = fopen(KERN_FILEPATH,"wb+");			
 
-		if(fd==NULL) 
-		{
-			notify("Cant create file :/");
-		}
-		else
-		{
-			fwrite(filedump, 1, KERN_DUMPSIZE, fd);
-			notify("Finished writing Kernel to a File :)");
-			fclose(fd);
-		}
+	if(fd==NULL) 
+	{
+		notify("Cant create file :/");
+	}
+	
+	else
+	{
+		fwrite(filedump, 1, KERN_DUMPSIZE, fd);
+		notify("Finished writing Kernel to a File :)");
+		fclose(fd);
+	}
 
 #endif
 
