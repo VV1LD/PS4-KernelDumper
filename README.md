@@ -38,7 +38,7 @@ To dump the kernel image to the filesystem or USB stick either change/keep
 
 ..to where ever you choose
 
-and to use the USB method simply comment out this line in /include/defines.h
+and to use the USB method simply comment out this line in ```/include/defines.h```
 
 ```c
 #define DEBUG_SOCKET
