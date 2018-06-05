@@ -28,12 +28,12 @@ int kdump(struct thread *td, struct kdump_args* args){
 	uint64_t uaddr = args->payload_info_dumper->uaddr;
 
 	// run copyout into userland memory for the kaddr we specify
-	int cpRet = copyout(kaddr, uaddr , 0x4000);
+	int cpRet = copyout(kaddr, uaddr , PAGE_SIZE);
 
 	// if mapping doesnt exist zero out that mem
 	if(cpRet == -1){
 		printfkernel("bzero at 0x%016llx\n", kaddr);
-		bzero(uaddr, 0x4000);
+		bzero(uaddr, PAGE_SIZE);
 		return cpRet;
 	}
 	
@@ -286,7 +286,7 @@ int _main(struct thread *td){
 
 #endif
 
-		pos = pos + 0x4000;
+		pos = pos + PAGE_SIZE;
 	}
 	
 #ifdef DEBUG_SOCKET
