@@ -1,55 +1,58 @@
 
 // change the version
-#define KERN_VER 455
+#define KERN_VER 505
 
 // comment to use usb method!
 //#define DEBUG_SOCKET
 
-// multi version support
-#ifdef KERN_VER && KERN_VER == 405
+// comment if you dont want ps4 to turn off after completing kdump
+//#define SHUTDOWN_ON_FINISH
 
-	#define	KERN_PRINTF		0x00347580
-	#define	KERN_BASE_PTR		0x0030EB30
-	#define	KERN_COPYOUT		0x00286d70
-	#define	KERN_BZERO		0x00286c30
-	#define	KERN_PRISON0		0x00F26010
+// multi version support
+#if KERN_VER == 405
+
+	#define	KERN_PRINTF				0x00347580
+	#define	KERN_BASE_PTR			0x0030EB30
+	#define	KERN_COPYOUT			0x00286d70
+	#define	KERN_BZERO				0x00286c30
+	#define	KERN_PRISON0			0x00F26010
 	#define	KERN_ROOTVNODE		0x0206D250
 	#define	KERN_UART_ENABLE	0x0186b0a0
 
 	#define KERN_DUMPSIZE 		108806144	// can change if you want but may crash if you hit critical code in gpu memory
 
-#elif KERN_VER && KERN_VER == 455
+#elif KERN_VER == 455
 
 	#define	KERN_BASE_PTR 		0x03095d0
-	#define	KERN_PRINTF 		0x0017F30
-	#define	KERN_COPYOUT 		0x014A7B0
-	#define	KERN_BZERO 		0x014A610
-	#define	KERN_PRISON0 		0x10399B0
+	#define	KERN_PRINTF 			0x0017F30
+	#define	KERN_COPYOUT 			0x014A7B0
+	#define	KERN_BZERO 				0x014A610
+	#define	KERN_PRISON0 			0x10399B0
 	#define	KERN_ROOTVNODE 		0x21AFA30
 	#define	KERN_UART_ENABLE 	0x1997BC8
 
 	#define KERN_DUMPSIZE 		100663296	// can change if you want but may crash if you hit critical code in gpu memory
 
-#elif KERN_VER && KERN_VER == 505
+#elif KERN_VER == 505
 
-	#define	KERN_PRINTF		0x0436040
+	#define	KERN_PRINTF				0x0436040
 	#define	KERN_BASE_PTR 		0x00001C0
-	#define	KERN_COPYOUT		0x01ea630
-	#define	KERN_BZERO		0x01ea510
-	#define	KERN_PRISON0 		0x10986A0
+	#define	KERN_COPYOUT			0x01ea630
+	#define	KERN_BZERO				0x01ea470 
+	#define	KERN_PRISON0 			0x10986A0
 	#define	KERN_ROOTVNODE 		0x22C1A70
 	#define	KERN_UART_ENABLE 	0		// mira takes care of this
 
-	#define KERN_DUMPSIZE 		110854144	// can change if you want but may crash if you hit critical code in gpu memory
+	#define KERN_DUMPSIZE 		108806144	// can change if you want but may crash if you hit critical code in gpu memory
 
 #else // crash your shit lol
 
-	#define	KERN_PRINTF 		0
-	#define	KERN_BASE_PTR		0
-	#define	KERN_COPYOUT		0
-	#define	KERN_BZERO		0
-	#define	KERN_COPYIN		0
-	#define	KERN_PRISON0		0
+	#define	KERN_PRINTF 			0
+	#define	KERN_BASE_PTR			0
+	#define	KERN_COPYOUT			0
+	#define	KERN_BZERO				0
+	#define	KERN_COPYIN				0
+	#define	KERN_PRISON0			0
 	#define	KERN_ROOTVNODE		0
 	#define	KERN_UART_ENABLE	0
 
@@ -62,7 +65,6 @@
 
 
 #define PAGE_SIZE 16348
-#define KERN_DUMPSIZE 100663296				// can change if you want but may crash if you hit critical code in gpu memory
 #define KERN_DUMPITER KERN_DUMPSIZE / PAGE_SIZE 	// can only dump a page at at time so we need to iterate
 #define KERN_FILEPATH "/mnt/usb0/kdump.bin"		// file path if debug socket isnt defined
 
@@ -143,10 +145,10 @@ static inline __attribute__((always_inline)) void writeCr0(uint64_t cr0) {
 
 
 struct ucred {
-	uint32_t useless1;
-	uint32_t cr_uid;     // effective user id
-	uint32_t cr_ruid;    // real user id
- 	uint32_t useless2;
+			uint32_t useless1;
+			uint32_t cr_uid;     // effective user id
+			uint32_t cr_ruid;    // real user id
+ 			uint32_t useless2;
     	uint32_t useless3;
     	uint32_t cr_rgid;    // real group id
     	uint32_t useless4;

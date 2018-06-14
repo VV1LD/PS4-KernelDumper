@@ -6,7 +6,7 @@
 *
 *	Thanks to:
 *	-Qwertyuiop for his kernel exploits
-* 	-Specter for his Code Execution method
+* -Specter for his Code Execution method
 *	-IDC for helping to understand things
 *	-Shadow for the copyout trick ;)
 *
@@ -24,7 +24,7 @@ int kdump(struct thread *td, struct kdump_args* args){
 	void (*bzero)(void *b, size_t len) = (void *)(kernel_base + KERN_BZERO);
 
 	// pull in our arguments
-  	uint64_t kaddr = args->payload_info_dumper->kaddr;
+  uint64_t kaddr = args->payload_info_dumper->kaddr;
 	uint64_t uaddr = args->payload_info_dumper->uaddr;
 
 	// run copyout into userland memory for the kaddr we specify
@@ -49,6 +49,7 @@ int kpayload(struct thread *td,struct kpayload_args* args){
 	fd = td->td_proc->p_fd;
 	cred = td->td_proc->p_ucred;
 
+
 	void* kernel_base = &((uint8_t*)__readmsr(0xC0000082))[-KERN_BASE_PTR];
 	uint8_t* kernel_ptr = (uint8_t*)kernel_base;
 	void** got_prison0 =   (void**)&kernel_ptr[KERN_PRISON0];
@@ -67,12 +68,27 @@ int kpayload(struct thread *td,struct kpayload_args* args){
 	cred->cr_prison = *got_prison0;
 	fd->fd_rdir = fd->fd_jdir = *got_rootvnode;
 
+	// escalate ucred privs, needed for access to the filesystem ie* mounting & decrypting files
+	void *td_ucred = *(void **)(((char *)td) + 304); // p_ucred == td_ucred
+	
+	// sceSblACMgrIsSystemUcred
+	uint64_t *sonyCred = (uint64_t *)(((char *)td_ucred) + 96);
+	*sonyCred = 0xffffffffffffffff;
+	
+	// sceSblACMgrGetDeviceAccessType
+	uint64_t *sceProcType = (uint64_t *)(((char *)td_ucred) + 88);
+	*sceProcType = 0x3801000000000013; // Max access
+	
+	// sceSblACMgrHasSceProcessCapability
+	uint64_t *sceProcCap = (uint64_t *)(((char *)td_ucred) + 104);
+	*sceProcCap = 0xffffffffffffffff; // Sce Process
+
 	// Disable write protection
 
 	uint64_t cr0 = readCr0();
 	writeCr0(cr0 & ~X86_CR0_WP);
 	
-#ifdef KERN_VER && KERN_VER < 505
+#if KERN_VER < 505
 	// enable uart :)
 	*(char *)(kernel_base + KERN_UART_ENABLE) = 0; 
 #endif
@@ -236,7 +252,7 @@ int _main(struct thread *td){
 
 	// patch some things in the kernel (sandbox, prison, debug settings etc..)
 	
-  	struct payload_info payload_info;
+  struct payload_info payload_info;
 
 	payload_info.uaddr = dump;
 
@@ -261,7 +277,7 @@ int _main(struct thread *td){
 	// loop on our kdump payload 
 	
 	uint64_t pos = 0;
-  	struct payload_info_dumper payload_info_dumper;
+  struct payload_info_dumper payload_info_dumper;
 
 	notify("Starting Kernel Dump...");
 
@@ -295,27 +311,37 @@ int _main(struct thread *td){
 
 #else
 	notify("Finished dumping Kernel to userland!");
-	notify("Now wait for file to be written, this may take a while...");
 		
-	// write to file
-    	FILE* fd = fopen(KERN_FILEPATH,"wb+");			
+	sceKernelSleep(5);
 
-	if(fd==NULL) 
+	// write to file		
+	int fd = open(KERN_FILEPATH, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+
+	if(fd==-1) 
 	{
 		notify("Cant create file :/");
 	}
 	
 	else
 	{
-		fwrite(filedump, 1, KERN_DUMPSIZE, fd);
+		write(fd, filedump, KERN_DUMPSIZE); // Write the userland buffer to USB
+	
 		notify("Finished writing Kernel to a File :)");
-		fclose(fd);
+		close(fd);
 	}
 
 #endif
 
 	munmap(dump, PAGE_SIZE);
 	munmap(filedump, KERN_DUMPSIZE);
+
+#ifdef SHUTDOWN_ON_FINISH
+		int evf = syscall(540, "SceSysCoreReboot");
+		syscall(546, evf, 0x4000, 0);
+		syscall(541, evf);
+		syscall(37, 1, 30);
+
+#endif
 
 	return 0;
 }
