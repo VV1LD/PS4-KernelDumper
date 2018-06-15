@@ -11,11 +11,11 @@
 // multi version support
 #if KERN_VER == 405
 
-	#define	KERN_PRINTF				0x00347580
-	#define	KERN_BASE_PTR			0x0030EB30
-	#define	KERN_COPYOUT			0x00286d70
-	#define	KERN_BZERO				0x00286c30
-	#define	KERN_PRISON0			0x00F26010
+	#define	KERN_PRINTF		0x00347580
+	#define	KERN_BASE_PTR		0x0030EB30
+	#define	KERN_COPYOUT		0x00286d70
+	#define	KERN_BZERO		0x00286c30
+	#define	KERN_PRISON0		0x00F26010
 	#define	KERN_ROOTVNODE		0x0206D250
 	#define	KERN_UART_ENABLE	0x0186b0a0
 
@@ -24,10 +24,10 @@
 #elif KERN_VER == 455
 
 	#define	KERN_BASE_PTR 		0x03095d0
-	#define	KERN_PRINTF 			0x0017F30
-	#define	KERN_COPYOUT 			0x014A7B0
-	#define	KERN_BZERO 				0x014A610
-	#define	KERN_PRISON0 			0x10399B0
+	#define	KERN_PRINTF 		0x0017F30
+	#define	KERN_COPYOUT 		0x014A7B0
+	#define	KERN_BZERO 		0x014A610
+	#define	KERN_PRISON0 		0x10399B0
 	#define	KERN_ROOTVNODE 		0x21AFA30
 	#define	KERN_UART_ENABLE 	0x1997BC8
 
@@ -35,13 +35,13 @@
 
 #elif KERN_VER == 505
 
-	#define	KERN_PRINTF				0x0436040
+	#define	KERN_PRINTF		0x0436040
 	#define	KERN_BASE_PTR 		0x00001C0
-	#define	KERN_COPYOUT			0x01ea630
-	#define	KERN_BZERO				0x01ea470 
-	#define	KERN_PRISON0 			0x10986A0
+	#define	KERN_COPYOUT		0x01ea630
+	#define	KERN_BZERO		0x01ea510 
+	#define	KERN_PRISON0 		0x10986A0
 	#define	KERN_ROOTVNODE 		0x22C1A70
-	#define	KERN_UART_ENABLE 	0		// mira takes care of this
+	#define	KERN_UART_ENABLE 		0	// mira takes care of this
 
 	#define KERN_DUMPSIZE 		108806144	// can change if you want but may crash if you hit critical code in gpu memory
 
@@ -50,13 +50,13 @@
 	#define	KERN_PRINTF 			0
 	#define	KERN_BASE_PTR			0
 	#define	KERN_COPYOUT			0
-	#define	KERN_BZERO				0
-	#define	KERN_COPYIN				0
+	#define	KERN_BZERO			0
+	#define	KERN_COPYIN			0
 	#define	KERN_PRISON0			0
-	#define	KERN_ROOTVNODE		0
-	#define	KERN_UART_ENABLE	0
+	#define	KERN_ROOTVNODE			0
+	#define	KERN_UART_ENABLE		0
 
-	#define KERN_DUMPSIZE 		0	
+	#define KERN_DUMPSIZE 			0	
 
 #endif
 
